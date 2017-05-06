@@ -1,0 +1,12 @@
+# compiled output
+/target
+
+# IDEs and editors
+/.idea
+*.iml
+.project
+.classpath
+.settings/
+
+# logging
+*.log
