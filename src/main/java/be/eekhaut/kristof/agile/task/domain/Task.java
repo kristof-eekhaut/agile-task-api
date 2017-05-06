@@ -1,5 +1,9 @@
 package be.eekhaut.kristof.agile.task.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import javax.persistence.*;
 import java.util.Optional;
 
@@ -16,7 +20,7 @@ public class Task {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_TASK_ID")
     private Task parentTask;
 
@@ -45,6 +49,30 @@ public class Task {
 
     public Optional<Task> getParentTask() {
         return Optional.ofNullable(parentTask);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Task other = (Task) obj;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(obj))
+                .append(id, other.id)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(id).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
     public static Builder builder() {
