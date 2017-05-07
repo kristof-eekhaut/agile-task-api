@@ -50,7 +50,7 @@ public class TaskService {
         }
         Task parentTask = taskRepository.findOne(parentTaskId);
         if(parentTask == null) {
-            throw new BusinessException(BusinessErrorCode.PARENT_TASK_NOT_FOUND);
+            throw new BusinessException(BusinessErrorCode.PARENT_TASK_NOT_FOUND, "Parent task could not be found.");
         }
         return parentTask;
     }
