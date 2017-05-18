@@ -5,6 +5,7 @@ import be.eekhaut.kristof.agile.task.api.TaskTO;
 import be.eekhaut.kristof.agile.task.domain.Task;
 import be.eekhaut.kristof.agile.task.exception.BusinessErrorCode;
 import be.eekhaut.kristof.agile.task.repo.TaskRepository;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +37,19 @@ public class TaskRestControllerITest {
 
     @Before
     public void setupData() {
+        cleanUpData();
+
         task1 = Task.builder().id("PRJ-1").name("First story name").description("First story description").build();
         task2 = Task.builder().id("PRJ-2").name("Second story name").description("Second story description").build();
 
         subtask = Task.builder().id("PRJ-11").name("Sub-task name").description("Sub-task description").parentTask(task1).build();
 
-        taskRepository.deleteAll();
         taskRepository.save(Arrays.asList(task1, task2, subtask));
+    }
+
+    @After
+    public void cleanUpData() {
+        taskRepository.deleteAll();
     }
 
     @Test
@@ -94,7 +101,7 @@ public class TaskRestControllerITest {
     @Test
     public void testGetTask_notFound() {
 
-        ResponseEntity<TaskTO> responseEntity = restTemplate.getForEntity("/tasks/NOT-FOUND", TaskTO.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/tasks/NOT-FOUND", String.class);
 
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.NOT_FOUND));
     }

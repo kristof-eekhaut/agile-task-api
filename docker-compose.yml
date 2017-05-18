@@ -1,0 +1,23 @@
+version: '2.1'
+
+services:
+  task-mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=agile_tasks
+      - MYSQL_USER=task_api
+      - MYSQL_PASSWORD=task_api
+  task-api:
+    image: kristof/task-api
+    depends_on:
+      - task-mysql
+    ports:
+      - 8080:8080
+      - 5005:5005
+    environment:
+      - DATABASE_HOST=task-mysql
+      - DATABASE_USER=task_api
+      - DATABASE_PASSWORD=task_api
+      - DATABASE_NAME=agile_tasks
+      - DATABASE_PORT=3306
