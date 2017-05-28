@@ -1,9 +1,6 @@
 package be.eekhaut.kristof.agile.task;
 
-import be.eekhaut.kristof.agile.task.api.CreateTaskTO;
-import be.eekhaut.kristof.agile.task.api.TaskTO;
 import be.eekhaut.kristof.agile.task.domain.Task;
-import be.eekhaut.kristof.agile.task.exception.BusinessErrorCode;
 import be.eekhaut.kristof.agile.task.repo.TaskRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URI;
 import java.util.Arrays;
 
+import static be.eekhaut.kristof.agile.task.TaskMatcher.equalsTask;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -55,47 +53,47 @@ public class TaskRestControllerITest {
     @Test
     public void testGetTask_withId1() {
 
-        ResponseEntity<TaskTO> responseEntity = restTemplate.getForEntity("/tasks/PRJ-1", TaskTO.class);
+        ResponseEntity<Task> responseEntity = restTemplate.getForEntity("/tasks/PRJ-1", Task.class);
 
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
-        TaskTO expectedTask = TaskTO.builder()
+        Task expectedTask = Task.builder()
                 .id("PRJ-1")
                 .name("First story name")
                 .description("First story description")
                 .build();
-        assertThat(responseEntity.getBody(), equalTo(expectedTask));
+        assertThat(responseEntity.getBody(), equalsTask(expectedTask));
     }
 
     @Test
     public void testGetTask_withId2() {
 
-        ResponseEntity<TaskTO> responseEntity = restTemplate.getForEntity("/tasks/PRJ-2", TaskTO.class);
+        ResponseEntity<Task> responseEntity = restTemplate.getForEntity("/tasks/PRJ-2", Task.class);
 
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
-        TaskTO expectedTask = TaskTO.builder()
+        Task expectedTask = Task.builder()
                 .id("PRJ-2")
                 .name("Second story name")
                 .description("Second story description")
                 .build();
-        assertThat(responseEntity.getBody(), equalTo(expectedTask));
+        assertThat(responseEntity.getBody(), equalsTask(expectedTask));
     }
 
     @Test
     public void testGetTask_withSubTask() {
 
-        ResponseEntity<TaskTO> responseEntity = restTemplate.getForEntity("/tasks/PRJ-11", TaskTO.class);
+        ResponseEntity<Task> responseEntity = restTemplate.getForEntity("/tasks/PRJ-11", Task.class);
 
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.OK));
 
-        TaskTO expectedTask = TaskTO.builder()
+        Task expectedTask = Task.builder()
                 .id("PRJ-11")
                 .name("Sub-task name")
                 .description("Sub-task description")
                 .parentTaskId("PRJ-1")
                 .build();
-        assertThat(responseEntity.getBody(), equalTo(expectedTask));
+        assertThat(responseEntity.getBody(), equalsTask(expectedTask));
     }
 
     @Test
@@ -109,7 +107,7 @@ public class TaskRestControllerITest {
     @Test
     public void testCreateTask() {
 
-        CreateTaskTO newTaskTO = CreateTaskTO.builder().id("PRJ-3").name("New story name").description("New story description").build();
+        Task newTaskTO = Task.builder().id("PRJ-3").name("New story name").description("New story description").build();
 
         ResponseEntity<Void> responseEntity = restTemplate.postForEntity("/tasks", newTaskTO, Void.class);
 
@@ -125,33 +123,34 @@ public class TaskRestControllerITest {
     @Test
     public void testCreateTask_withSubtask() {
 
-        CreateTaskTO newTaskTO = CreateTaskTO.builder().id("PRJ-12").name("New sub-task").description("New sub-task description").parentTaskId("PRJ-1").build();
+        Task newTaskTO = Task.builder().id("PRJ-12").name("New sub-task").description("New sub-task description").parentTaskId("PRJ-1").build();
 
         ResponseEntity<Void> createResponseEntity = restTemplate.postForEntity("/tasks", newTaskTO, Void.class);
 
         URI uriForCreatedTask = createResponseEntity.getHeaders().getLocation();
         assertThat(uriForCreatedTask.toString(), endsWith("/tasks/PRJ-12"));
 
-        ResponseEntity<TaskTO>  getResponseEntity = restTemplate.getForEntity(uriForCreatedTask, TaskTO.class);
-        TaskTO expectedTask = TaskTO.builder()
+        ResponseEntity<Task> getResponseEntity = restTemplate.getForEntity(uriForCreatedTask, Task.class);
+        Task expectedTask = Task.builder()
                 .id("PRJ-12")
                 .name("New sub-task")
                 .description("New sub-task description")
                 .parentTaskId("PRJ-1")
                 .build();
-        assertThat(getResponseEntity.getBody(), equalTo(expectedTask));
+
+        assertThat(getResponseEntity.getBody(), equalsTask(expectedTask));
     }
 
     @Test
     public void testCreateTask_withMissingSubtask() throws Exception {
 
-        CreateTaskTO newTaskTO = CreateTaskTO.builder().id("PRJ-12").name("New sub-task").description("New sub-task description").parentTaskId("NOT-FOUND").build();
+        Task newTaskTO = Task.builder().id("PRJ-12").name("New sub-task").description("New sub-task description").parentTaskId("NOT-FOUND").build();
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity("/tasks", newTaskTO, String.class);
 
         assertThat(responseEntity.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
 
-        String expected = "{'errorKey':'ERR_" + BusinessErrorCode.PARENT_TASK_NOT_FOUND + "'}";
+        String expected = "[{'field':'parentTaskId', 'code':'parent-task.not-found'}]";
         JSONAssert.assertEquals(expected, responseEntity.getBody(), false);
     }
 }

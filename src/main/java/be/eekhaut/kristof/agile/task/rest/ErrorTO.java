@@ -2,13 +2,23 @@ package be.eekhaut.kristof.agile.task.rest;
 
 public class ErrorTO {
 
-    private String errorKey;
+    private String field;
+    private String code;
 
-    public ErrorTO(String errorKey) {
-        this.errorKey = errorKey;
+    public ErrorTO(String code) {
+        this.code = code;
     }
 
-    public String getErrorKey() {
-        return errorKey;
+    public ErrorTO(String code, String field) {
+        this(code);
+        this.field = field;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getField() {
+        return field;
     }
 }

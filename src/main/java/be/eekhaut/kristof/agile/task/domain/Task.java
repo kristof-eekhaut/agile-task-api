@@ -56,7 +56,6 @@ public class Task {
         }
         Task other = (Task) obj;
         return new EqualsBuilder()
-                .appendSuper(super.equals(obj))
                 .append(id, other.id)
                 .isEquals();
     }

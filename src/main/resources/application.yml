@@ -4,8 +4,8 @@ spring:
     name: task-api
   data:
     mongodb:
-      host: 192.168.99.100
-      port: 27017
+      host: ${TASK_API_MONGO_HOST:192.168.99.100}
+      port: ${TASK_API_MONGO_PORT:27017}
       database: task-api
       repostitories:
         enabled: true
