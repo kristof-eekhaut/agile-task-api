@@ -3,26 +3,22 @@ package be.eekhaut.kristof.agile.task.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.Optional;
 
-@Entity(name = "TASK")
+@Document
 public class Task {
 
     @Id
-    @Column(name = "TASK_ID")
     private String id;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "DESCRIPTION")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_TASK_ID")
-    private Task parentTask;
+    private String parentTaskId;
 
     Task() {
         super();
@@ -32,7 +28,7 @@ public class Task {
         id = builder.id;
         name = builder.name;
         description = builder.description;
-        parentTask = builder.parentTask;
+        parentTaskId = builder.parentTaskId;
     }
 
     public String getId() {
@@ -47,8 +43,8 @@ public class Task {
         return description;
     }
 
-    public Optional<Task> getParentTask() {
-        return Optional.ofNullable(parentTask);
+    public Optional<String> getParentTaskId() {
+        return Optional.ofNullable(parentTaskId);
     }
 
     @Override
@@ -83,7 +79,7 @@ public class Task {
         private String id;
         private String name;
         private String description;
-        private Task parentTask;
+        private String parentTaskId;
 
         public Builder() {
         }
@@ -103,8 +99,8 @@ public class Task {
             return this;
         }
 
-        public Builder parentTask(Task val) {
-            parentTask = val;
+        public Builder parentTaskId(String val) {
+            parentTaskId = val;
             return this;
         }
 

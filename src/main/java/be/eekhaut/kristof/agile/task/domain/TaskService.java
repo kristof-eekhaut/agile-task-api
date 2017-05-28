@@ -29,7 +29,7 @@ public class TaskService {
                 .id(task.getId())
                 .name(task.getName())
                 .description(task.getDescription())
-                .parentTaskId(task.getParentTask().map(Task::getId).orElse(null))
+                .parentTaskId(task.getParentTaskId().orElse(null))
                 .build();
     }
 
@@ -38,13 +38,13 @@ public class TaskService {
                 .id(createTaskTO.getId())
                 .name(createTaskTO.getName())
                 .description(createTaskTO.getDescription())
-                .parentTask(checkAndReturnParentTask(createTaskTO.getParentTaskId()))
+                .parentTaskId(checkAndReturnParentTaskId(createTaskTO.getParentTaskId()))
                 .build();
 
         return mapToTO(taskRepository.save(task));
     }
 
-    private Task checkAndReturnParentTask(String parentTaskId) {
+    private String checkAndReturnParentTaskId(String parentTaskId) {
         if(parentTaskId == null) {
             return null;
         }
@@ -52,6 +52,6 @@ public class TaskService {
         if(parentTask == null) {
             throw new BusinessException(BusinessErrorCode.PARENT_TASK_NOT_FOUND, "Parent task could not be found.");
         }
-        return parentTask;
+        return parentTask.getId();
     }
 }

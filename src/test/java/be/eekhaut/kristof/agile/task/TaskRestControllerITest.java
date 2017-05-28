@@ -42,7 +42,7 @@ public class TaskRestControllerITest {
         task1 = Task.builder().id("PRJ-1").name("First story name").description("First story description").build();
         task2 = Task.builder().id("PRJ-2").name("Second story name").description("Second story description").build();
 
-        subtask = Task.builder().id("PRJ-11").name("Sub-task name").description("Sub-task description").parentTask(task1).build();
+        subtask = Task.builder().id("PRJ-11").name("Sub-task name").description("Sub-task description").parentTaskId(task1.getId()).build();
 
         taskRepository.save(Arrays.asList(task1, task2, subtask));
     }
@@ -119,7 +119,7 @@ public class TaskRestControllerITest {
         Task createdTask = taskRepository.findOne("PRJ-3");
         assertThat(createdTask.getName(), equalTo("New story name"));
         assertThat(createdTask.getDescription(), equalTo("New story description"));
-        assertThat(createdTask.getParentTask().isPresent(), is(false));
+        assertThat(createdTask.getParentTaskId().isPresent(), is(false));
     }
 
     @Test
