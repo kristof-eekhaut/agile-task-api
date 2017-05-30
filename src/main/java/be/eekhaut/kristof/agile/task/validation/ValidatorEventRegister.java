@@ -1,4 +1,4 @@
-package be.eekhaut.kristof.agile.task.repo;
+package be.eekhaut.kristof.agile.task.validation;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class ValidatorEventRegister implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<String> events = Arrays.asList("beforeCreate");
+        List<String> events = Arrays.asList("beforeCreate", "beforeSave", "beforeDelete");
         for (Map.Entry<String, Validator> entry : validators.entrySet()) {
             events.stream()
                     .filter(p -> entry.getKey().startsWith(p))

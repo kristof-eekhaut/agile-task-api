@@ -1,4 +1,4 @@
-package be.eekhaut.kristof.agile.task.rules;
+package be.eekhaut.kristof.agile.task.validation.rules;
 
 import be.eekhaut.kristof.agile.task.domain.Task;
 import be.eekhaut.kristof.agile.task.repo.TaskRepository;
@@ -16,7 +16,7 @@ public class ParentTaskMustExistRule {
         if(task.getParentTaskId().isPresent()) {
             Task parentTask = taskRepository.findOne(task.getParentTaskId().get());
             if (parentTask == null) {
-                errors.rejectValue("parentTaskId", "parent-task.not-found");
+                errors.rejectValue("parentTaskId", "task.parent-task-not-found");
             }
         }
     }

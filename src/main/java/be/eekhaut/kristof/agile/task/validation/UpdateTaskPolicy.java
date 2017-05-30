@@ -1,14 +1,14 @@
-package be.eekhaut.kristof.agile.task.repo;
+package be.eekhaut.kristof.agile.task.validation;
 
 import be.eekhaut.kristof.agile.task.domain.Task;
-import be.eekhaut.kristof.agile.task.rules.ParentTaskMustExistRule;
+import be.eekhaut.kristof.agile.task.validation.rules.ParentTaskMustExistRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-@Component("beforeCreateTaskValidator")
-public class CreateTaskPolicy implements Validator {
+@Component("beforeSaveTaskValidator")
+public class UpdateTaskPolicy implements Validator {
 
     @Autowired
     private ParentTaskMustExistRule parentTaskMustExistRule;
