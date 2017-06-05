@@ -14,8 +14,3 @@ spring:
     deserialization:
       fail-on-unknown-properties: true
 
-
----
-
-spring:
-  profiles: container

@@ -17,11 +17,15 @@ import java.util.Map;
 @Configuration
 public class ValidatorEventRegister implements InitializingBean {
 
-    @Autowired
-    private ValidatingRepositoryEventListener validatingRepositoryEventListener;
+    private final ValidatingRepositoryEventListener validatingRepositoryEventListener;
+    private final Map<String, Validator> validators;
 
     @Autowired
-    private Map<String, Validator> validators;
+    public ValidatorEventRegister(ValidatingRepositoryEventListener validatingRepositoryEventListener,
+                                  Map<String, Validator> validators) {
+        this.validatingRepositoryEventListener = validatingRepositoryEventListener;
+        this.validators = validators;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

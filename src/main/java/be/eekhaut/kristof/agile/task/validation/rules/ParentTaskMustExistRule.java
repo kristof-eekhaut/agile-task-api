@@ -9,8 +9,12 @@ import org.springframework.validation.Errors;
 @Component
 public class ParentTaskMustExistRule {
 
+    private final TaskRepository taskRepository;
+
     @Autowired
-    private TaskRepository taskRepository;
+    public ParentTaskMustExistRule(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public void check(Task task, Errors errors) {
         if(task.getParentTaskId().isPresent()) {

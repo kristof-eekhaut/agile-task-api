@@ -10,8 +10,12 @@ import org.springframework.validation.Validator;
 @Component("beforeSaveTaskValidator")
 public class UpdateTaskPolicy implements Validator {
 
+    private final ParentTaskMustExistRule parentTaskMustExistRule;
+
     @Autowired
-    private ParentTaskMustExistRule parentTaskMustExistRule;
+    public UpdateTaskPolicy(ParentTaskMustExistRule parentTaskMustExistRule) {
+        this.parentTaskMustExistRule = parentTaskMustExistRule;
+    }
 
     @Override
     public boolean supports(Class<?> aClass) {

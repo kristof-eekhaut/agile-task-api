@@ -10,8 +10,12 @@ import org.springframework.validation.Validator;
 @Component("beforeDeleteTaskValidator")
 public class DeleteTaskPolicy implements Validator {
 
+    private final DeleteOfTaskWithSubTasksNotAllowedRule deleteOfTaskWithSubTasksNotAllowedRule;
+
     @Autowired
-    private DeleteOfTaskWithSubTasksNotAllowedRule deleteOfTaskWithSubTasksNotAllowedRule;
+    public DeleteTaskPolicy(DeleteOfTaskWithSubTasksNotAllowedRule deleteOfTaskWithSubTasksNotAllowedRule) {
+        this.deleteOfTaskWithSubTasksNotAllowedRule = deleteOfTaskWithSubTasksNotAllowedRule;
+    }
 
     @Override
     public boolean supports(Class<?> aClass) {

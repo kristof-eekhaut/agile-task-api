@@ -11,15 +11,19 @@ import java.util.List;
 @Component
 public class DeleteOfTaskWithSubTasksNotAllowedRule {
 
-        @Autowired
-        private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-        public void check(Task task, Errors errors) {
+    @Autowired
+    public DeleteOfTaskWithSubTasksNotAllowedRule(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
-            List<Task> subTasks = taskRepository.findTasksByParentTaskId(task.getId());
+    public void check(Task task, Errors errors) {
 
-            if(!subTasks.isEmpty()) {
-                errors.reject("task.delete-with-sub-tasks-not-allowed");
-            }
+        List<Task> subTasks = taskRepository.findTasksByParentTaskId(task.getId());
+
+        if(!subTasks.isEmpty()) {
+            errors.reject("task.delete-with-sub-tasks-not-allowed");
         }
+    }
 }
